@@ -47,7 +47,7 @@ for layer in model.layers[86:]:
 
 train_datagen=ImageDataGenerator(preprocessing_function=preprocess_input) #included in our dependencies
 
-train_generator=train_datagen.flow_from_directory('/images',
+train_generator=train_datagen.flow_from_directory('images',
                                                  target_size=(128,128),
                                                  color_mode='rgb',
                                                  batch_size=32,
