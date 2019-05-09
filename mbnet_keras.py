@@ -8,7 +8,7 @@ from keras.preprocessing import image
 from keras.models import Model
 from keras.applications import imagenet_utils
 from keras.layers import Dense, GlobalAveragePooling2D, Dropout
-from keras.applications import MobileNet
+from mobilenet_sipeed.mobilenet import MobileNet
 from keras.applications.mobilenet import preprocess_input
 
 def prepare_image(file):
@@ -19,7 +19,7 @@ def prepare_image(file):
     return keras.applications.mobilenet.preprocess_input(img_array_expanded_dims)
 
 
-base_model=keras.applications.mobilenet.MobileNet(input_shape=(128, 128, 3), alpha = 0.75,depth_multiplier = 1, dropout = 0.001,include_top = False, weights = "imagenet", classes = 1000)
+base_model=MobileNet(input_shape=(128, 128, 3), alpha = 0.75,depth_multiplier = 1, dropout = 0.001,include_top = False, weights = "imagenet", classes = 1000, backend=keras.backend, layers=keras.layers,models=keras.models,utils=keras.utils)
 
 
 x=base_model.output
@@ -27,7 +27,7 @@ x=GlobalAveragePooling2D()(x)
 x=Dense(100,activation='relu')(x) #we add dense layers so that the model can learn more complex functions and classify for better results.
 x=Dropout(0.5)(x)
 x=Dense(50,activation='relu')(x) #dense layer 3
-preds=Dense(2,activation='softmax')(x) #final layer with softmax activation
+preds=Dense(4,activation='softmax')(x) #final layer with softmax activation
 
 
 model=Model(inputs=base_model.input,outputs=preds)
@@ -47,7 +47,7 @@ for layer in model.layers[86:]:
 
 train_datagen=ImageDataGenerator(preprocessing_function=preprocess_input) #included in our dependencies
 
-train_generator=train_datagen.flow_from_directory('/images',
+train_generator=train_datagen.flow_from_directory('images',
                                                  target_size=(128,128),
                                                  color_mode='rgb',
                                                  batch_size=32,
@@ -63,20 +63,7 @@ model.save('my_model.h5')
 
 #model.load_weights('my_model.h5')
 
-preprocessed_image = prepare_image('24.jpg')
-predictions_santa = model.predict(preprocessed_image)
-print("Santa")
-print(predictions_santa[0][1]*100)
-print("Uno")
-print(predictions_santa[0][0]*100)
 
-
-preprocessed_image = prepare_image('48.jpg')
-predictions_uno = model.predict(preprocessed_image)
-print("Santa")
-print(predictions_uno[0][1]*100)
-print("Uno")
-print(predictions_uno[0][0]*100)
 
 
 
