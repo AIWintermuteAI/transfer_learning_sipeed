@@ -27,7 +27,7 @@ x=GlobalAveragePooling2D()(x)
 x=Dense(100,activation='relu')(x) #we add dense layers so that the model can learn more complex functions and classify for better results.
 x=Dropout(0.5)(x)
 x=Dense(50,activation='relu')(x) #dense layer 3
-preds=Dense(4,activation='softmax')(x) #final layer with softmax activation
+preds=Dense(2,activation='softmax')(x) #final layer with softmax activation
 
 
 model=Model(inputs=base_model.input,outputs=preds)
